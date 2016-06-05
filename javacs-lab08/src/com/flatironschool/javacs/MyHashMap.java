@@ -5,6 +5,8 @@ package com.flatironschool.javacs;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
+import java.util.ArrayList;
 
 /**
  * Implementation of a HashMap using a collection of MyLinearMap and
@@ -24,7 +26,7 @@ public class MyHashMap<K, V> extends MyBetterMap<K, V> implements Map<K, V> {
 	public V put(K key, V value) {
 		V oldValue = super.put(key, value);
 		
-		//System.out.println("Put " + key + " in " + map + " size now " + map.size());
+		System.out.println("Put " + key + " in " + maps + " size now " + maps.size());
 		
 		// check if the number of elements per map exceeds the threshold
 		if (size() > maps.size() * FACTOR) {
@@ -40,8 +42,31 @@ public class MyHashMap<K, V> extends MyBetterMap<K, V> implements Map<K, V> {
 	 * 
 	 */
 	protected void rehash() {
-        // TODO: fill this in.
-        throw new UnsupportedOperationException();
+       	//(1) collect the entries in the table
+       	//I just made a local copy of the old thing bc 
+       	// I assume it just gets over written anyway when
+       	// makeMaps is called -- so why bother
+		List<MyLinearMap<K, V>> oldMaps = maps;
+     	
+     	//(2) resize the table,
+     	Integer k = maps.size();
+     	Integer doubled = 2 * k;
+     	makeMaps(doubled);
+
+     	System.out.println("Size of maps: " + maps.size());
+		System.out.println("Size of Oldmaps: " + oldMaps.size());
+ 		
+ 		//(3) and then put the entries back in. 
+     	for (MyLinearMap<K, V> oldMap: oldMaps){
+     		for (Entry oldEntry: oldMap.getEntries()){
+     			put((K)oldEntry.getKey(), (V)oldEntry.getValue());
+     		}
+     	}
+     	
+				
+		
+     	
+
 	}
 
 	/**
